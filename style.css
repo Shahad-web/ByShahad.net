@@ -156,34 +156,37 @@ img {
 /* ============================================= */
 /* ============== LAYOUT COMPONENTS ============ */
 /* ============================================= */
-
 /* Header & Navigation */
 header {
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  background-color: transparent; /* Transparent by default */
+  box-shadow: none; /* No shadow initially */
   position: fixed;
   width: 100%;
   z-index: 1000;
   transition: all 0.3s ease;
+  padding: 1.5rem 0; /* More padding when transparent */
 }
 
 header.scrolled {
-  padding: 0.5rem 0;
+  background-color: white; /* Solid white when scrolled */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 0.5rem 0; /* Less padding when solid */
 }
 
 nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
 }
 
-/* Logo */
+/* Logo - visible on both transparent and solid backgrounds */
 .logo {
   display: inline-block;
   height: 56px;
   width: 56px;
   position: relative;
+  z-index: 1001; /* Ensure logo stays above other elements */
 }
 
 .logo-image-container {
@@ -228,7 +231,7 @@ nav {
   opacity: 0.3;
 }
 
-/* Navigation Links */
+/* Navigation Links - white when transparent, dark when solid */
 .nav-links {
   display: flex;
   list-style: none;
@@ -243,6 +246,11 @@ nav {
   font-weight: 600;
   padding: 0.5rem 0;
   transition: color 0.3s;
+  color: rgb(160, 160, 109); /* White text for transparent header */
+}
+
+header.scrolled .nav-links a {
+  color: var(--dark); /* Dark text when scrolled */
 }
 
 .nav-links a:hover {
@@ -264,17 +272,25 @@ nav {
   width: 100%;
 }
 
-/* Hamburger Menu */
+/* Hamburger Menu - white when transparent, dark when solid */
 .hamburger {
   display: none;
   cursor: pointer;
   transition: transform 0.3s;
+  color: white; /* White icon for transparent header */
+  font-size: 1.5rem;
+  z-index: 1001;
+}
+
+header.scrolled .hamburger {
+  color: var(--dark); /* Dark icon when scrolled */
 }
 
 .hamburger:hover {
   transform: scale(1.1);
 }
 
+/* Mobile Navigation */
 @media (max-width: 768px) {
   .hamburger {
     display: block;
@@ -286,7 +302,7 @@ nav {
     left: -100%;
     width: 100%;
     height: calc(100vh - 80px);
-    background-color: white;
+    background-color: rgb(145, 144, 124);
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -300,6 +316,11 @@ nav {
   .nav-links li {
     margin: 1rem 0;
   }
+
+  /* Ensure mobile nav links are dark */
+  .nav-links a {
+    color: var(--dark);
+  }
 }
 
 /* ============================================= */
@@ -309,69 +330,263 @@ nav {
 /* Hero Section */
 #home {
   height: 100vh;
-  background-color: var(--beige);
+  min-height: 800px;
+  background: linear-gradient(135deg, var(--beige) 0%, rgba(245, 240, 230, 0.9) 100%);
   display: flex;
   align-items: center;
   text-align: center;
-  padding-top: 80px;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .hero-content {
   width: 100%;
   position: relative;
-  z-index: 1;
+  z-index: 10;
+  padding: 0 2rem;
 }
 
 .hero-content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  animation: fadeInDown 1s ease;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  margin-bottom: 1.5rem;
+  animation: fadeInDown 0.8s ease both;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  color: var(--dark);
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
   max-width: 700px;
-  margin: 0 auto 2rem;
-  animation: fadeIn 1.5s ease;
+  margin: 0 auto 3rem;
+  animation: fadeIn 1s ease both 0.3s;
+  color: var(--gray-medium);
+  line-height: 1.8;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  animation: fadeInUp 1s ease both 0.6s;
+}
+
+.btn-primary {
+  background-color: var(--gold);
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--gold);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+  color: white;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--dark);
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.4s ease;
+  border: 2px solid var(--dark);
+}
+
+.btn-secondary:hover {
+  background-color: var(--dark);
+  color: white;
+  transform: translateY(-3px);
 }
 
 /* Hero Decorative Elements */
 .hero-deco {
   position: absolute;
-  opacity: 0.1;
-  z-index: 0;
+  z-index: 1;
+  filter: blur(40px);
+  opacity: 0.15;
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+  mix-blend-mode: overlay;
 }
 
 .hero-deco-1 {
-  top: -50px;
-  right: -50px;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
+  top: 10%;
+  right: 5%;
+  width: 400px;
+  height: 400px;
   background-color: var(--gold);
-  filter: blur(20px);
-  animation: float 6s ease-in-out infinite;
+  animation-delay: 0s;
 }
 
 .hero-deco-2 {
-  bottom: -100px;
-  left: -100px;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
+  bottom: 5%;
+  left: 5%;
+  width: 500px;
+  height: 500px;
   background-color: var(--nude);
-  filter: blur(30px);
-  animation: float 8s ease-in-out infinite 2s;
+  animation-delay: 2s;
 }
 
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2.5rem;
+.hero-deco-3 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background-color: var(--gold);
+  opacity: 0.08;
+  animation-delay: 1s;
+  animation-duration: 12s;
+}
+
+/* Hero Image (optional) */
+.hero-image {
+  position: absolute;
+  right: 10%;
+  bottom: 0;
+  width: 40%;
+  max-width: 600px;
+  z-index: 5;
+  animation: fadeInRight 1s ease both 0.5s;
+}
+
+/* Scrolling Indicator */
+.scroll-down {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  animation: bounce 2s infinite;
+}
+
+.scroll-down span {
+  display: block;
+  width: 30px;
+  height: 50px;
+  border: 2px solid var(--gold);
+  border-radius: 50px;
+  position: relative;
+}
+
+.scroll-down span::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  animation: scrollMouse 2s infinite;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
   }
 }
 
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) translateX(-50%);
+  }
+  40% {
+    transform: translateY(-20px) translateX(-50%);
+  }
+  60% {
+    transform: translateY(-10px) translateX(-50%);
+  }
+}
+
+@keyframes scrollMouse {
+  0% {
+    opacity: 1;
+    top: 10px;
+  }
+  100% {
+    opacity: 0;
+    top: 30px;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .hero-image {
+    width: 50%;
+    right: 5%;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-image {
+    display: none;
+  }
+  
+  .hero-content {
+    padding-top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  #home {
+    min-height: 700px;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .hero-deco-1, .hero-deco-2, .hero-deco-3 {
+    display: none;
+  }
+}
 /* About Section */
 #about {
   background-color: white;
@@ -1202,7 +1417,6 @@ footer {
 .feature-list li:hover i {
   color: var(--dark);
 }
-
 .section-title::after {
   content: '';
   position: absolute;
